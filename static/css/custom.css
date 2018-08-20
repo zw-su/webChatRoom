@@ -1,0 +1,258 @@
+body{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.page-container{
+    border :1px solid green;
+    padding-left: 150px;
+    padding-right: 150px ;
+}
+
+.wrap-left{
+    width: 75%;
+    /*background-color: #dca7a7;*/
+    float: left;
+}
+
+.wrap-right{
+    width: 25%;
+    background-color: #5bc0de;
+    float: right;
+}
+.clear-both{
+    clear:both;
+}
+.footer{
+    margin-top: 50px;
+    height:200px;
+    background-color: #3c3c3c;
+}
+
+.atricle-head-img img{
+    height: 125px;
+    width: 220px;
+}
+
+.article-box{
+    border: 2px solid #b2dba1;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+body{
+    color: #333;
+    font-family: Arial,"微软雅黑","Microsoft yahei","Hiragino Sans GB","冬青黑体简体中文 w3","Microsoft Yahei","Hiragino Sans GB","冬青黑体简体中文 w3",STXihei,"华文细黑",SimSun,"宋体",Heiti,"黑体",sans-serif;
+    background:url("../images/21.jpg");background-size:cover;
+    background-size:cover;
+    border: 1px dotted 0.8;
+
+    /*相对视口高度*/
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin: 0;
+    /*另外的居中效果*/
+    padding-top: calc(50vh - 6em);
+     }
+.chat-container::before {
+    /*全屏居中，之前说过*/
+    0%   {background:url("../images/21.jpg");background-size:cover;}
+    15%  {background:url("../images/22.jpg");background-size:cover;}
+    34%  {background:url("../images/27.jpg");background-size:cover;}
+    67%  {background:url("../images/24.jpg");background-size:cover;}
+    100% {background:url("../images/25.jpg");background-size:cover;}
+}
+
+/*毛玻璃伪类造！*/
+.chat-container::before {
+    content: '';
+    position: absolute;
+    /*四个角都要定位才有内容*/
+    top: 0; right: 0; bottom: 0; left: 0;
+    /*模糊效果在 中心区域看起来非常完美，但在接近边缘处会逐渐消退。这是因为模糊效果 会削减实色像素所能覆盖的范围，削减的幅度正是模糊半径的长度。对伪元 素应用一个 red 背景有助于我们看清事情的真相（参见图 4-21）。*/
+    margin: -30px;
+    /*防止遮罩字体*/
+    z-index: -1;
+    /*滤镜*/
+    -webkit-filter: blur(20px);
+    filter: blur(20px);
+    opacity: 0.4;
+
+
+}
+ 
+body{
+    animation-name:myfirst;
+    animation-duration:30s;
+    /*变换时间*/
+    animation-delay:10s;
+    /*动画开始时间*/
+    animation-iteration-count:infinite;
+    /*下一周期循环播放*/
+    animation-play-state:running;
+    /*动画开始运行*/
+    }
+
+@keyframes myfirst
+{
+    0%   {background:url("../images/21.jpg");background-size:cover;}
+    15%  {background:url("../images/22.jpg");background-size:cover;}
+    34%  {background:url("../images/27.jpg");background-size:cover;}
+    67%  {background:url("../images/24.jpg");background-size:cover;}
+    100% {background:url("../images/25.jpg");background-size:cover;}
+}
+.form{background: rgba(255,255,255,0.5);width:400px;margin:120px auto;}
+/*阴影*/
+.fa{display: inline-block;top: 27px;left: 6px;position: relative;color: #ccc;}
+input[type="text"],input[type="password"]{padding-left:26px;}
+.checkbox{padding-left:21px;}   
+
+/*好友和分组的颜色渐变*/
+.gradual_change {
+    
+    background:#ed4a60; 
+    background: -webkit-linear-gradient(#ed5a5e, #ed3a61);
+    background: -o-linear-gradient(#ed5a5e, #ed3a61);  
+    background: -moz-linear-gradient(#ed5a5e, #ed3a61); 
+    background: linear-gradient(#ed5a5e, #ed3a61);
+}
+聊天框气泡模式
+
+
+
+a{
+    color: #333;
+}
+a:hover{
+    color: #337;
+    text-decoration: none;
+}
+a:visited{
+    color: #333;
+    text-decoration: none;
+}
+
+.article-title-bg{
+    font-size: 30px;
+    /*padding-top: 10px;*/
+    margin-top: 10px;
+}
+
+.article-title-brief{
+    color: #999;
+    margin-top: 10px;
+}
+
+.article-detail-img {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.article-content{
+    line-height: 30px;
+}
+
+.comment-node{
+    border: 1px solid darkgray;
+    padding: 5px;
+}
+
+.root-comment{
+    border: 2px solid darkblue;
+    padding: 5px;
+}
+/*for webchat*/
+.chat-container{
+    width: 100%;
+    height: 100%;
+    margin-left: 400px;
+    margin-top:150px;
+    border: 1px none darkgray;
+    position: relative;
+    margin:auto;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left:0;
+    
+    padding: 1em;
+    max-width: 73em;
+
+    /*亮度提高炸毛玻璃效果，然后再加透明度*/
+    background: hsla(0,0,100%,.25) border-box;
+    /*防散发滤镜效果*/
+    overflow: hidden;
+    border-radius: .3em;
+    box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset,
+    0 .5em 1em rgba(64, 64, 64, 0.6);
+    text-shadow: 0 1px 1px hsla(0,0%,100%,.3);
+    background-attachment: fixed;
+    
+
+   
+}
+
+.left-contact-panel{
+    width: 200px;
+    height: 606px;
+    border:2px solid #333;
+    float: left;
+    margin-right: 20px;
+
+}
+
+.right-chat-panel{
+    width: 750px;
+    height: 100%;
+    border:2px solid #333;
+    float: left;
+    margin-left: 20px;
+}
+
+.chat-box-title{
+    height: 50px;
+    border: 1px solid #333;
+    font-size: 20px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.chat-box-window{
+    height: 400px;
+    border: 1px solid #333333;
+    overflow: auto;
+    font-size: 16px;
+    
+}
+
+.chat-box-emoj{
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #333333;
+}
+
+.chat-box-msg-box{
+    height: 112px;
+    border: 1px solid #333333;
+    width: 746px;
+    position: relative;
+
+    
+
+    
+}
+
+.chat-box-msg-box #msg{
+    height: 80px;
+    width: 80%;
+    font-size: 18px;
+     /*border: 1px solid #ccc;*/
+    border: 0.5px solid #333333;
+    background:rgba(255,255,255,0) !important;
+    
+
+}
+.chat-box-msg-box button{
+    position: absolute;
+    top:50px;
+    right: 50px;
+    margin-bottom: 80px;
+}

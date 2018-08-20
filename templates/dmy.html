@@ -1,0 +1,174 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>达摩院登录</title>
+    <link rel='stylesheet' href="{% static 'css/first.css' %}" />
+    <script type="text/javascript" src='/static/js/jquery-3.3.1.min.js'></script>
+    
+    <style type="text/css">
+        {% block style %}
+        {% endblock %}
+
+       
+    </style>
+</head>
+<body >
+    <main>
+<!-- <div id='boli' style="position:absolute; width:100%; height:100%; z-index:-1; left:0; top:0;">       -->
+        <!-- img src="{% static 'images/15.jpg' %}" height="100%" width="100%" style="left:0; top:0;">       -->
+  
+    <!-- <blockquote> -->
+        <div  class='my_margin_log  '>
+            <h1  align='center' style='font-family: 华文中宋;line-height: 2;'>达摩聊天室</h1>
+        {% block content2 %}
+            <form action="{% url 'dmy.html' %}" method='post' >
+        {% endblock %}
+            {% csrf_token %}
+                
+                <div >
+                    <div class='i1 my_left' >用户名</div>
+                    <div class='my_left50'>
+                        <input type='text' class='register ' name='name'  >
+                        <div style="color: red;height:20px;line-height: 2;">                 
+                        {{ name_error }}
+                    </div>        
+                    </div >
+                </div>
+                
+                <div >
+                    <div  class='i1 my_left '>密码</div>
+                    <div class='my_left50' >
+                        <input type='password' name='passwd' class='register ' placeholder="请输入6-20位号码字符" >
+                        <div style="color: red;height:20px;line-height: 2;">                 
+                        {{ passwd_error }}
+                    </div>        
+                    </div>
+                </div>
+                
+            {% block content3 %}
+            {% if code_switch %}
+             <div >
+                    <div  class='i1 my_left '></div>
+                    <div class='my_left50' style='text-align: center;' >
+                        <input type='text' name='verify_code' id='code' class='register ' style='width:180px;' placeholder="验证码" required="length[0-4]">
+                        <img height="40px" style="font-family: arial;
+                        vertical-align: middle;cursor:pointer" id = 'vercode' src="/static/verifCode/{{ filename }}.png" />
+                        <img height='30px' style='vertical-align: middle;' id='right'>
+                        <!-- <input type='hidden' name='verify_code_key'  placeholder="验证码" > -->
+                    <div  style="color: red;height:20px;line-height: 2;">                 
+                        {{ code_error }}
+                    </div>        
+                    </div>
+            </div>
+            {% endif %}
+        <script type="text/javascript">
+            function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        } //end csrf
+        $(document).ready(function() {                      
+            //set csrf befor send ajax
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+                }
+            });//end csrf
+            // 正确显示勾,错误显示×
+            $(function () {
+                $('#code').blur(function(){
+                    vcode=$('#code').val();
+                    $.post('/ajax_code/',{
+                        'vcode':vcode,
+                    },function(data){
+                        if (data.msg === 'ok') {
+                            $('#right').attr('src','/static/images/gou.png');
+                            $('#register').attr('type','submit');
+                        } else 
+                        {$('#right').attr('src','/static/images/cha.png');
+                        $('#register').attr('type','button');}
+                    })
+                });
+            });
+            function change_code() {
+                $.post('/ajax_code/',{
+                        'vercode':'ok',    
+                    },function(data) {
+                        if (data.msg === 'ok') {
+                            img=data.filename+'.png'    
+                            $('#vercode').attr('src',"/static/verifCode/"+img);
+                        }
+                    });
+                };
+            interval=setInterval(change_code,30000);
+            
+            // #点击验证码刷新验证码
+            $(function () {
+                $('#vercode').click(function() {
+                    change_code();
+                    clearInterval(interval);
+                    interval=setInterval(change_code,30000);   
+                });
+            });
+            });
+        </script>
+           
+                                
+                <div>
+                    <div class=' i1 my_left'>
+                            
+                    </div>   
+                            
+                    <div class='my_left50' > 
+                        
+                            <input type='checkbox' name='remember' value='1' class='isSaved' >
+                            <span class='i3'>记住密码</span> 
+                        
+                            <div style='float:right;margin-left: 70px;'>
+                                <a href='#' target='_blank' class='i3'>忘记密码?</a>
+                                <a href='#' target='_blank' class='i3'>
+                                快捷登录</a>
+                            </div>    
+
+                    </div>  
+                </div>                                 
+                <div>
+                    <div class='i1 my_left'>
+                            
+                    </div>
+                    <div   class='my_left50'   >
+                                
+                        <input type='submit'  value='登录' class='log'  id='register' />
+                        <div class=' show_border  ' style='float:right;' >
+                                <a href="{% url 'register' %}" target='_blank'  style='text-decoration:none;color:#7bae55;' >注册会员 </a>
+                        </div>
+                    </div>
+                </div> 
+            {% endblock %} 
+            </form>
+        </div>
+     <!-- </blockquote>  -->  
+</main>
+</body>
+</html>

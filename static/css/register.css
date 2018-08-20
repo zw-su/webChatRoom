@@ -1,0 +1,170 @@
+
+body,p,h1,h2,h3,h4,h5,h6,ul,ol{
+    margin:0px;
+}
+./*i2{
+    font-size: 28px;
+    background-color: silver;
+    font-style: italic; /*#斜体显示(normal:正常)
+}*/
+div.font{
+    
+    font-weight:bold;/*#文本加粗*/
+    color: green;
+}
+.dec {
+    text-decoration: underline;/*#下划线*/
+}
+
+
+
+a {
+    color : black;
+    text-decoration:underline;
+}
+a:hover {
+    color:#FF0000;
+}
+/*input {
+    border :none;
+    outline : none;
+    
+}*/
+.table_right{
+    
+    text-align : right;
+}
+.table_left{
+    text-align : left;
+}
+.isSaved {
+    width:18px;
+    height :18px;
+    border-style: ridge ;
+    border-width:0.5px;
+    border-radius: 0px;
+    background-color: #999;
+    vertical-align: middle;
+}
+.register {
+    width : 300px;
+    height: 40px;
+    border-color:#999;
+    font-family: arial;/*#对于小字体显示更好*/
+    outline : none;
+    border-style: groove ;/*#ridge*/
+    border-width:0.5px;
+    padding :0px 12px ;
+    box-sizing:border-box;
+
+    }
+.register:focus {
+    box-shadow: 0px 0px 5px 0px #64a131;
+    border-color : #64a131;
+}
+.log {
+        line-height: 38px;
+        font-size:18px;
+        width:143px;
+        height:38px;
+        border:none;
+        border-radius: 6px;
+        box-sizing:border-box;
+        margin-top: 0px;
+        margin-right:24px;
+        padding-top :0px ;
+        vertical-align:top;
+        color:#FFFFF2;
+        background-color:#64A131;
+
+}
+.show_border {
+    
+
+    background-color:#F5FFED;
+    width:143px;
+    height:38px;
+    font-size:18px;
+    line-height: 38px;
+    border-color: #64a131;
+    border-style: solid ;
+    border-width:1px;
+    border-radius: 6px;
+    box-sizing:border-box;
+    text-align: center;
+   /* margin-top: 13px;*/
+    padding :0px 0px ;
+    
+
+}
+.i1  {
+            font-size:16px;
+            width:64px;
+            height:40px;
+            text-align: right;
+            color:#2E6AC0;
+            margin-right: 30px;
+            margin-left: 20px;
+        }
+
+.i3 {
+    font-size:16px;
+    color:#FFFFFF;
+}
+.my_margin {
+   /* width:25%;
+    height:400px;
+    margin-top :100px;
+    margin-left :10%;
+    background-size:cover;
+    float:left;*/
+        border: 1px solid blue;
+    opacity: 0.5;
+}
+
+.my_margin_log {
+    width:500px;
+    /*height:455px;*/
+    height:200px;
+    margin-top :360px;
+    float:left;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin:auto;
+    /*margin-right:15%;*/
+    line-height: 4;
+
+}
+.my_left {
+            float: left;
+            /*width:25%;*/
+            /*margin-right:0px;*/
+            /*margin-left: 30px;*/
+        }
+.my_left50 {
+            /*width:75%;*/
+            float: left;
+            margin-right:50px;
+
+        }
+.my_a {
+            position: absolute;
+            right:135px;
+            bottom:20px;
+            width:150px;
+            height:48px;
+            border:1px solid #64A131;
+            font-size:20px;
+            color:#7bae55;
+            text-align: center;
+            line-height: 48px;
+            border-radius: 6px;
+            text-decoration: none;
+
+        }
+
+
+

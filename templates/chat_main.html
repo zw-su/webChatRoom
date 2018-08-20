@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://v3.bootcss.com/examples/navbar-static-top/ -->
+<html lang="en">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="http://v3.bootcss.com/favicon.ico"> -->
+
+    <title>达摩聊天室</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/navbar-static-top.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <script src="/static/js/ie-emulation-modes-warning.js"></script>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <script src='/static/js/jquery-3.3.1.min.js'></script>
+    
+    <script src='/static/js/bootstrap.min.js'></script>
+    
+    </script>
+    <style type="text/css">
+        
+    </style>
+</head>
+<body>
+<div> 
+    <button id='logout' style='cursor:pointer;'>退出</button>
+</div>
+<div class="chat-container">
+    <div class="left-contact-panel">
+        {% if my_head %}
+            <img width="120" height="100" src="{{ my_head.url }}" >
+        {% endif %}
+        <!-- <input type='file' name='avatar'> -->
+        <div style='border-bottom:1px solid green'>{{ my_signature }}</div>
+        {{my_name}}
+        <ul class='nav nav-tabs' role='tablist' style='opacity:0.6;'>
+            <li role='presentation' class='active' id='friend_data' >
+                <a href="#contact-tab" role='tab' data-toggle ='tab'> 好友列表</a>
+            </li>
+            <li role='presentation' id='group_data' >
+                <a href="#group-tab" role='tab' data-toggle='tab'>分组列表</a>
+            </li>
+           
+        </ul>
+        <div class='tab-content'>
+            <div role='tabpanel' class='tab-pane fade in active' id='contact-tab'>
+                <ul class='list-group' id='online' style='color:red;opacity: 0.7;'>
+                    {% for friend in online_list %}
+                         <li 
+                         contact-type='single' contact-id='{{friend.id}}'
+                            onclick='OpenChatWindow(this)'
+                            class='list-group-item'  >
+                         
+                                <span class="badge hide">0</span>
+                                <span  class="contact-name">{{friend.name}}</span>
+                            </li>
+
+                    {% endfor %}
+                </ul>
+                <ul class='list-group' id='not_online' style='color:blue;background-color: gray;opacity: 0.4;'>
+                    {% for friend in friends_list %}
+                        {% if friend not in online_list %}
+                            
+                            <li  contact-type='single' contact-id=' {{friend.id}}'
+                            onclick='OpenChatWindow(this)'
+                            class='list-group-item'  >
+                                <span class="badge hide">0</span>
+                                <span  class="contact-name">{{friend.name}}</span>
+                            </li>                        
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- #fade 产生渐入的动画效果,如果页面初始化的时候就有一个默认显示的面板（并且需要渐入效果），则还需要加上in样式， -->
+            <div role='tabpanel' class='tab-pane fade' id='group-tab' style='opacity:0.6;'>
+                <ul class='list-group'>
+                    {% for group in group_list %}
+                        <li contact-type='group' contact-id='{{group.id}}' 
+                       onclick='OpenChatWindow(this)'
+                         class='list-group-item' >
+
+                          <span class="badge hide" >0</span>
+                         <span class="contact-name">{{group.name}}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="right-chat-panel">
+        <div class="chat-box-title" contact-id = "" contact-type="" >
+            
+        </div>
+        <div class="chat-box-window">
+                
+            
+        </div>
+        <div class="chat-box-emoj">
+            <div class='col-md-3' style='opacity:0.5;'>
+                <input name='filename' type='file' id='file_upload'>
+            </div>
+            <div class='col-md-2'>
+                <span class='glyphicon glyphicon-upload' onclick='fileUpload()' ></span>
+            </div>
+        </div>
+        <div class="chat-box-msg-box"  >
+            <div id='txtdiv' style="border:1px solid gray;height:30px;weight:400px;">
+            </div>          
+            <!-- contenteditable="true" -->
+            <!-- <textarea  name=""  id="msg" rows="6" cols='16'></textarea> -->
+            <div  id="msg"></div>
+            <button class="btn btn-success"  id='button_click_send'>发送消息</button>
+        </div>
+
+    </div>
+    <div class="clear-both"></div>
+</div>
+
+
+<script>
+    // wangEditor 从v3版本开始不支持 textarea ，但是可以通过onchange来实现 textarea 中提交富文本内容。
+    $(function(){
+        var E = window.wangEditor
+        var editor = new E('#txtdiv','#msg')
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+        'foreColor',  // 文字颜色
+        'bold',// 粗体
+        'fontName',  // 字体
+        'italic',// 斜体
+        'emoticon',  // 表情
+        'underline'// 下划线
+        ]
+        // var $text1 = $('#msg')
+        // editor.customConfig.onchange = function (html) {
+        //     // 监控变化，同步更新到 textarea
+        //     $text1.val(html)
+        // }
+        editor.create()
+        // 初始化 textarea 的值
+        // $text1.val(editor.txt.html())
+       
+       
+        //内容修改事件，此处做的是实时展示实际效果
+        editor.onchange = function(){ 
+        //获取editor的html值
+            var html = editor.$txt.html();
+            $("#msg").html(html)
+        }
+    });
+    function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        } //end csrf
+    //全局聊天字典,分为个人和群组的聊天内容(用id可能会重复)
+    
+    GLOBAL_CHAT_DIC={
+        'single':{},
+        'group':{},
+        };
+    $(document).ready(function(){
+        getMsg();
+        
+        //set csrf befor send ajax
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+        // end set csrf
+        // 点击好友列表和群组列表发生的改变
+        $(function () {
+            $('#friend_data').click(function() {
+                // $('#friend_data').addClass('active');
+                $('#group_data').removeClass('gradual_change');
+            });
+             $('#group_data').click(function() {
+                $('#friend_data').removeClass('gradual_change');
+                // $('#group_data').addClass('active');
+            });
+        });
+        // #以上都是官网解决ajax的post的代码,直接拷贝,最好放入到base.html中
+        //定时取消息
+        // var MsgRefresher =setInterval(function() {
+        //     getMsg();},3000);
+        //定时取消息 end
+
+        //让webchat页面的标高亮
+        $("#navbar a[href='{{ request.path }}']").parent().addClass('active');
+        
+        // delegate() 方法为指定的元素（属于被选元素的子元素）添加一个或多个事件处理程序，并规定当这些事件发生时运行的函数(1.7版本后尽量使用on)
+        // $('body').delegate('textarea','keydown',function(e){//网上的版本
+        $('#msg,#button_click_send').on('keydown click',function(event){
+                if ((event.type=='keydown' && event.which==13) 
+                    || (event.type=='click' && event.target.nodeName !='DIV')) {
+            // #event.target.nodeName的值一定要是大写
+                var mag_text=$('#msg').html();
+                // .trim删除字符串的前后空格
+                if ($.trim(mag_text).length >0) {
+                    console.log(mag_text);
+                    sendMsg(mag_text);
+                }
+                Addsentmsgintbox(mag_text);
+                $('#msg').html('');
+            }
+            
+        });
+    }); //ready end
+
+    // 监控页面点关闭和alt+f4关闭网页后,删除后台session
+    // window.onbeforeunload=function (event){
+    $(function() {
+        $('#logout').click(function() {
+            $.post('/change_session/',{
+                    'del_name':'ok',
+                },function(data){
+                    if (data.msg ==='ok') {
+                        window.location.href="/dmy.html/";
+                    }
+                }
+        )
+    })  
+    });
+                
+        
+    //动态获取用户在线情况
+    function is_online() {
+        var json=[];
+        
+        $('#online>li').each(function(){
+            json.push({
+                'my_id':$(this).attr('contact-id')
+            });
+        });
+        
+        $.post('/is_online/',{'id':JSON.stringify(json)}
+        ,function (data) {
+            if (data['delete']=='ok') {
+                console.log(data);
+            
+                console.log('not');
+
+                $.each(data,function(i,n) {
+                    console.log(i);
+                    if (i != 'delete'){
+                    var num=n;
+                    console.log(num);
+                    console.log(typeof String(num));
+                    var $li=$("#online>li[contact-id="+String(num)+"]");
+                    console.log($li);
+                    $('#not_online').append($li);
+                    // $('#online').remove($li);
+                }
+
+                });
+                
+            } else {
+                console.log(data);
+                console.log(data.length);
+                console.log(data);
+                $.each(data,function(i,n) {
+                    console.log('online')
+                    var num=n;
+                    
+                    var $li=$("#not_online>li[contact-id="+String(num)+"]");
+                    console.log($li);
+                    $('#online').append($li);
+                    // $('#online').remove($li);
+            })
+        }
+    })
+    };  
+    var timer=setInterval(is_online,5000);
+    function getMsg() {
+        $.getJSON("/get_msg/",function(callback){
+            // console.log(callback);
+            parseNewMags(callback);//收到的消息进行解析
+            getMsg();//内部循环调用函数自己就是js的递归
+        });//有返回值,就return
+    };
+    function parseNewMags(callback) {
+        //获取当前打开的窗口是在和谁聊天
+        var current_id=$('.chat-box-title').attr('contact-id');
+        var current_type=$('.chat-box-title').attr('contact-type');
+        for (var i in callback) {
+            console.log(callback[i]);
+            var date=new Date(callback[i].timestamp*1000);
+            var new_msg_ele="<div class='msg-item chat_bubble' style=\
+            'postion:absolute;margin-left:20px;margin-top:6px;'>"+
+            "<span style='font-size:18px;color:#FF00FF;'>"+callback[i].from_name+" </span>"+
+            "<span style='font-size:10px;'>"+date.toLocaleString('chinese',{hour12:false})+" </span>"+
+            "<div class='msg-text'>"+callback[i].msg+'</div>'
+            +"</div>";
+            if (callback[i].type=='single') {
+                var msg_from_id=callback[i].from;
+            } else {
+                var msg_from_id=callback[i].to;
+            }
+            //将收到字典拼接成前端HTML对象
+            if (parseInt(msg_from_id)==current_id && callback[i].type==current_type) {
+                $('.chat-box-window').append(new_msg_ele);
+
+            } else {               
+                if (GLOBAL_CHAT_DIC[callback[i].type][msg_from_id]){
+                    GLOBAL_CHAT_DIC[callback[i].type][msg_from_id]+=new_msg_ele;
+                }else {
+                    GLOBAL_CHAT_DIC[callback[i].type][msg_from_id]=new_msg_ele;
+                }// if end
+                var cc=$('.list-group li[contact-type='+callback[i].type+"]");
+               
+                var contact_other=$('.list-group li[contact-type='+callback[i].type+"]").filter("li[contact-id="+msg_from_id+']');
+                var contact_other_num=$(contact_other).find('.badge').text();
+                $(contact_other).find('.badge').removeClass('hide');
+                $(contact_other).find('.badge').text(parseInt(contact_other_num)+1);
+                
+                //改变好友和群组的消息提醒
+                if (callback[i].type=='group' && $('#friend_data').attr('class')) {
+                
+                    console.log('color--,group');
+                    $('#group_data').addClass('gradual_change');
+                
+                } else if (callback[i].type=='single' && $('#group_data').attr('class')) {
+                        console.log('color..,friend');
+                    
+                    $('#friend_data').addClass('gradual_change');
+                };
+
+        
+
+        
+            } 
+        }
+    }
+
+    function sendMsg(msg_text) {
+        var contact_type=$('.chat-box-title').attr('contact-type');
+        var contact_id=$('.chat-box-title').attr('contact-id');
+        if (contact_type && contact_id) {
+            var msg_item = {
+                'from' : "{{ my_id }}",
+                'from_name':'{{ my_name }}',
+                'to' : contact_id,
+                'type' : contact_type,
+                'msg' :msg_text            
+            };
+        // $.post('/send_msg/',msg_item,function(callback){
+        //     console.log(callback)
+        // 上面返回的是django自定义的QueryDict对象,value是的列表的字典,后台
+        // 只能一点一点 request.POST.get()获取,然后在组合.太麻烦了,
+        //所以用Json格式,后台直接反Json
+        $.post('/send_msg/',{data:JSON.stringify(msg_item)},function(callback){
+            console.log(callback)
+        }); //end post
+        }
+        // #通过ajax发送post数据要解决csrf_token的问题,bbs中是通过写js获取的,
+        // 这里要根据官方文档编辑,ajax的post提交一次搞定
+
+    }
+    function Addsentmsgintbox(mag_text) {
+        var new_msg_ele ="<div class='mag-item chat_bubble' style='text-align:right;postion:absolute;margin-right:20px;margin-top:6px;'>" +
+            "<span style='font-size:18px;color:#33FF00;'>"+
+        "{{my_name}}" + " </span >" + "<span style='font-size:12px;'>" +
+        new Date().toLocaleTimeString('chinese',{hour12:false}) + '</span> ' +
+         "<div class='msg-text'>" + mag_text +"</div>" +
+        "</div>"
+        $(".chat-box-window").append(new_msg_ele);
+        $('.chat-box-window').animate({scrollTop:$('.chat-box-window').height()},200);
+        // #怎么实现自动滚到底部,不管多高(冒号后面是滚动条的位置,逗号后面是延时)
+    };
+    function OpenChatWindow(ele) {
+        // console.log($(ele));
+        //在切换之前把当前的聊天记录放入字典
+        var current_id=$('.chat-box-title').attr('contact-id');
+        var current_type=$('.chat-box-title').attr('contact-type');
+        
+        //判断当有id和type的时候才把消息存储到全局字典
+        // if (current_id) {
+        //     GLOBAL_CHAT_DIC[current_type][current_id]=$('.chat-box-title').html();
+        // }
+        $(ele).addClass('active');
+        $(ele).siblings().removeClass('active');
+        //点击完后,把消息提醒改为0,并且class改为hidden
+        $(ele).find('.badge').text(0);
+        $(ele).find('.badge').addClass('hide');
+
+        var contact_id= $(ele).attr('contact-id');
+        var contact_name = $(ele).find('.contact-name').text();
+        var contact_type= $(ele).attr('contact-type');
+        // #然后把右边的title内容改掉
+        var chat_box_title_content='正在跟 ' + contact_name +' 聊天';
+        
+        $('.chat-box-title').attr('contact-type',contact_type);
+        $('.chat-box-title').attr('contact-id',contact_id);
+        $('.chat-box-title').html(chat_box_title_content);
+        //将新内容加载到页面中
+        var new_contact_record='';
+        if (GLOBAL_CHAT_DIC[contact_type][contact_id]) {
+            var new_contact_record= GLOBAL_CHAT_DIC[contact_type][contact_id];
+        }
+        $('.chat-box-window').html(new_contact_record);
+    }
+    function fileUpload() {//文件上传函数
+        var formdata= new FormData();
+        // console.log($('#file_upload')[0].files[0]);
+        formdata.append('file',$('#file_upload')[0].files[0]);
+        // 普通的表单上传通过jquery的serialize()转换成querystring后就可以直接ajax
+        // post 上传，但是碰到文件上传就不奏效了，型号html5有个方法FormData()可以实现上传，
+        $.ajax({
+            url:'/file_upload/',//"{% url 'file_upload' %}"
+            type:'POST',
+            data: formdata,
+            processData:false,
+            // 默认提交的post或者get请求会把后面的参数压缩成url参数专用的
+            //urlinto的格式，然后发送给后台。
+            // 但是我们这里发送的是文件，所以就上面的设置就告诉浏览器不用压缩了
+            contentType:false,
+            // 不要加什么请求头，说白了就是原来是什么样就是什么样，不要给formdata加其他内容了
+            success:function(data){
+                console.log(data);
+            }
+        })
+    }
+</script>
+<script src='/static/js/wangEditor.min.js'></script>
+<link href="/static/css/wangEditor.min.css" rel="stylesheet">
+</body>
+</html>
